@@ -1,0 +1,71 @@
+/**
+ * Une méthode pour griser un bouton qui est
+ * en fait un lien. Un selector CSS est utilisé
+ * afin de modifier l'apparance du text du bouton.
+ *
+ * @param nomBouton : le text d'un lien sur le page
+ */
+function griserBouton(nomBouton) {
+    if(!nomBouton){ return; }
+    var boutons = document.getElementsByTagName('a');
+    if(!boutons){ return; }
+    
+    for(var i=0; i<boutons.length; i++) {
+          if(boutons[i] && boutons[i].innerHTML){
+               if(boutons[i].innerHTML == nomBouton) {
+                     ajouterClassNameAuBouton("grise", boutons[i]);
+               }
+          }
+    }
+}
+
+/**
+ * Ajoute un className au bouton.
+ * 
+ * @param nom : un Selector CSS à ajouter à element.className 
+ * @param element : l'element à affecter 
+ */
+function ajouterClassNameAuBouton(nom, element) {
+     
+    if(nom && element) {
+      
+     	//Ne pas ajouter la classe si déjà présente      
+		var maReg = new RegExp ( "grise", "gi" ) ;
+		
+		if ( element.className.search( maReg ) == -1 ){			
+			element.className = element.className + " " + nom;
+		}
+	}
+}
+/**
+ * Une méthode pour de-griser un bouton qui est
+ * en fait un lien. Un selector CSS est retiré
+ * afin de modifier l'apparance du text du bouton.
+ *
+ * @param nomBouton : le text d'un lien sur le page
+ */
+function activerBouton(nomBouton) {
+    if(!nomBouton){ return; }
+    var boutons = document.getElementsByTagName('a');
+    if(!boutons){ return; }
+    
+    for(var i=0; i<boutons.length; i++) {
+          if(boutons[i] && boutons[i].innerHTML){
+               if(boutons[i].innerHTML == nomBouton) {
+                     retirerClassNameDuBouton("grise", boutons[i]);
+               }
+          }
+    }
+}
+
+/**
+ * Retirer un className du bouton.
+ * 
+ * @param nom : un Selector CSS à retirer d'element.className 
+ * @param element : l'element à affecter
+ */
+function retirerClassNameDuBouton(nom, element) {
+      if(nom && element) {
+            element.className = element.className.replace("grise", "")
+      }
+}
