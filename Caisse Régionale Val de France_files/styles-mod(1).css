@@ -131,7 +131,7 @@ h2, .titregroupe {
 	padding: 0 160px 3px 0;
 	position: relative;
 	border-bottom: 1px solid #d3d3d3;
-	width: 430px;
+	width: auto;
 }
 
 /**
