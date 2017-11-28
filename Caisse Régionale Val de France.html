@@ -1131,6 +1131,10 @@ function resetChoix() {
  			 			</div>  
 					</h2>
 					<ul>
+				<script>aide_bnt_smartphoneCash= "Contrôlez les paiements par smartphone";</script>
+				<li class="nomarge-li-BNT">
+					<a style="width:auto" href="" onmouseover="StatusMessage(true, aide_bnt_smartphoneCash);return true" onmouseout="StatusMessage( false )">Contrôle des Paiements</a>
+				</li>
 				<script>aide_bnt1_7= "Effectuez un virement";</script>
 				<li class="nomarge-li-BNT">
 					<a style="width:auto" href="javascript:doAction(&#39;Virementssepa&#39;,&#39;bnt&#39;)" onmouseover="StatusMessage(true, aide_bnt1_7);return true" onmouseout="StatusMessage( false )">Virements</a>
@@ -1463,7 +1467,7 @@ var widthpopup=580;
 <script>champsEnErreur = null;</script>
 		
 <!---------- FIN ERREURS-VALIDATION ----------->
-<table width="590px">
+<table width="100%">
 <form name="frm_fwk" method="POST" action="https://www.valdefrance-g3-enligne.credit-agricole.fr/stb/collecteNI?fwkaid=112319310_28112017_61716&amp;fwkpid=112319544_28112017"></form>
 <input type="hidden" name="fwkpid" value="112319544_28112017">
 <input type="hidden" name="fwkaid" value="112319310_28112017_61716">
