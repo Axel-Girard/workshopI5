@@ -213,7 +213,7 @@ jQuery.getScript( "//www.ca-valdefrance.fr/Vitrine/ObjCommun/DCIV2/js/v_16_1/sel
 	
 	// date du serveur lors de la génération de la page
 	// CANOUS-21179 Modification du traitement de la Date pour IE & Safari
-	var initDateServeur = new Date(2017,11,28,11,23,10);
+	var initDateServeur = new Date(2017,11,28,11,46,15);
 	// date du client lors de l'affichage de la page
 	var initDateClient = new Date();
 	/**
