@@ -1216,6 +1216,7 @@ menu bnc_2
 	background-color: #96ca12;
 	font-size: 13px;
 	font: 13px 'MontserratRegular', sans-serif;
+    display: inline-block;
 }
 
 #menu-bnc_2 li {
