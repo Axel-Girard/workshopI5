@@ -982,7 +982,7 @@ var OICTOPBV= true;
 <div id="fil-ariane_2">
     <div id="fil-ariane-contenu"><ul>
 	<li>                                    
-	<a title="Retour à la page d&#39;accueil" href="javascript:doAction(&#39;Synthcomptes&#39;, &#39;bnt&#39;);">                                  <img height="25" alt="Retour à la page d&#39;accueil" src="./Caisse Régionale Val de France_files/picto_home.png">                    </a></li><li>&nbsp;&gt;&nbsp;Synthèse comptes</li></ul></div>
+	<a title="Retour à la page d&#39;accueil" href="javascript:doAction(&#39;Synthcomptes&#39;, &#39;bnt&#39;);">                                  <img height="25" alt="Retour à la page d&#39;accueil" src="./Caisse Régionale Val de France_files/picto_home.png">                    </a></li><li>&nbsp;&gt;&nbsp;Créer une règle</li></ul></div>
 	
 	
 	
@@ -1428,7 +1428,7 @@ var newwidthpopup=690;
 <script type="text/javascript">
 var breadCrumbs = [
     {
-         label: "Synthèse comptes"
+         label: "Créer une règle"
     }
 ];
 refreshBreadCrumbs(breadCrumbs);
@@ -1454,43 +1454,73 @@ var widthpopup=580;
 </script>
 <h1>
 	
-		Contrôle des Paiements
-	
+		Ajouter une règle de contrôle
 	
 	
 		<span id="top-actions">
 			<a href="javascript:ouvrePOPUP(&#39;collecteNI?fwkaid=112319310_28112017_61716&amp;fwkpid=112319544_28112017&amp;fwkidpu=112319310_28112017_61716&amp;fwkrank=1&amp;fwkmperf=OFF&amp;executeNP=&amp;fwkaction=ouvrePopUp&amp;fwkcodeaction=Executer&amp;stbzn=pu&amp;stbpg=pagePU&amp;sessionAPP=Synthcomptes&amp;sessionSAG=4027f1cf15fffc666fa-5b99.SAG_V6&#39;,widthpopup,580,&#39;yes&#39;)" onmouseover="StatusMessage(true, statusimprime);return true" onmouseout="StatusMessage( false )" id="top-actions-imprimer">Imprimer</a>
 			<a href="javascript:ouvreassistance(&#39;collecteNI?fwkaid=112319310_28112017_61716&amp;fwkpid=112319544_28112017&amp;act=Aide&amp;stbzn=pu&amp;stbpg=pagePU&amp;sessionAPP=Synthcomptes&amp;sessionSAG=4027f1cf15fffc666fa-5b99.SAG_V6&amp;IDENT=L_AID&amp;ECRAN_AIDE=SYNTHCOMPTES_SYNTHESE&amp;NUM_AIDE=0&#39;,520,480,&#39;no&#39;)" id="top-actions-aide" onmouseout="StatusMessage( false )" onmouseover="StatusMessage(true, statusaide);return true">Aide</a>
 		</span>
-	
+
 </h1>
 </div>
 </br>
 <div class="form-group row">
-  <label for="nom-input" class="col-2 col-form-label">Nom</label>
+  <label for="nom-regle-input" class="col-2 col-form-label">Nom de la règle</label>
   <div class="col-10">
-    <input class="form-control" type="text" placeholder="Ajouter un nom" id="nom-input">
+    <input class="form-control" type="text" placeholder="Ajouter un nom" id="nom-regle-input">
   </div>
 </div>
-<div class="form-group row">
-  <label for="prenom-input" class="col-2 col-form-label">Prénom</label>
-  <div class="col-10">
-    <input class="form-control" type="search" placeholder="Ajouter un prénom" id="prenom-input">
-  </div>
-</div>
- <div class="form-group inline">
-    <label for="compteSelect">Numéro de compte</label>
-    <select class="form-control" id="compteSelect">
-      <option>3456789086578</option>
-      <option>9545678987678</option>
-      <option>8733478907652</option>
-      <option>9876567345675</option>
-      <option>7653234567876</option>
+<div class="form-group inline">
+    <label for="exclureCategory">Catégorie à exclure</label>
+    <select class="form-control" id="exclureCategory">
+      <option>Buraliste</option>
+      <option>Jeux vidéo</option>
+      <option>Livre</option>
+      <option>Cinema</option>
+      <option>Bar</option>
     </select>
   </div>
-<div class="text-xs-center"  data-toggle="buttons">
-<button type="button" class="btn btn-success text-xs-center">Valider</button>
-<button type="button" class="btn btn-warning text-xs-center">Annuler</button>
+<div class="form-group row">
+  <label for="montant-input" class="col-2 col-form-label">Montant maximum</label>
+  <div class="col-10">
+    <input class="form-control" type="number" placeholder="Ajouter un montant maximum" id="montant-input">
+  </div>
+</div>
+
+<div class="form-group row">
+  <label for="start-time-input" class="col-2 col-form-label">Heure de début</label>
+  <div class="col-10">
+    <input class="form-control" type="time" placeholder="Rentrer une heure de début" id="start-time-input">
+  </div>
+</div>
+
+<div class="form-group row">
+  <label for="end-time-input" class="col-2 col-form-label">Heure de fin</label>
+  <div class="col-10">
+    <input class="form-control" type="time" placeholder="Rentrer une heure de fin" id="end-time-input">
+  </div>
+</div>
+
+<div class="form-group inline">
+    <label for="exclureJour">Jour de la semaine</label>
+    <select class="form-control" id="exclureJour">
+      <option>Tous les jours</option>
+	  <option>Lundi à vendredi</option>
+      <option>Week-End</option>
+      <option>Lundi</option>
+      <option>Mardi</option>
+      <option>Mercredi</option>
+	  <option>Jeudi</option>
+	  <option>Vendredi</option>
+	  <option>Samedi</option>
+	  <option>Dimanche</option>
+    </select>
+  </div>
+
+<div>
+<button type="button" class="btn btn-success">Valider</button>
+<button type="button" class="btn btn-warning">Annuler</button>
 
 </div>
 
