@@ -1,0 +1,166 @@
+/**
+ * formatString(String, String...)
+ *
+ * Remplace les tokens {0} {1} {2} etc. d'un String avec les arguments
+ * envoyer avec le text. Si le nombre des args est different que le
+ * nombre de tokens, soit le token est remplacer avec rien, soit
+ * l'argument est ingoré. Voici quelques exemples :
+ * 
+ * String.format( "pas de tokens" );
+ * String.format( "un token, pas d'arg ({0})");
+ * String.format( "un token, un arg ({0})", "arg1");
+ * String.format( "un token, deux args ({0})", "arg1", "arg2");
+ * String.format( "deux tokens, deux args ({0},{1})", "arg1", "arg2");
+ * String.format( "deux tokens inversés, deux args ({1},{0})", "arg1", "arg2");
+ * String.format( "quatre tokens, deux args ({0},{1},{0},{1})", "arg1", "arg2");
+ * 
+ * @param text : le String à formater
+ * @param args : un nombre variable des arguments (comme varargs)
+ */
+function formatString(text) {
+    if (!text || arguments.length <= 1 ) { return text; }
+    
+    var lenMoins2 = arguments.length - 2;
+    for(var token=0; token<=lenMoins2; token++)
+    {
+        text = text.replace(
+                   new RegExp( "\\{"+ token +"\\}", "gi" ),
+                   arguments[token+1]
+               );
+    }
+    return text;
+};
+
+/**
+ * Represent les types possibles d'un breadcrumb.
+ */
+var Type = {
+  CONTENU            : "CONTENU",
+  ACTION_BNC         : "ACTION_BNC",
+  ACTION_BNT         : "ACTION_BNT",
+  ACTION_DELAYED_BNT : "ACTION_DELAYED_BNT",
+  PU                 : "PU"
+}
+
+/**
+ * Une correspondance entre le type du breadcrumb
+ * et la méthod à appeler selon le type.
+ */
+var Methode = {
+  CONTENU            : "lancerContenu",
+  ACTION_BNC         : "doAction",
+  ACTION_BNT         : "doAction",
+  ACTION_DELAYED_BNT : "doActionDelayed",
+  PU                 : "lancerPu"
+}
+
+/**
+ * Représente l'argument à rajouter (ou non) selon le type
+ * du breadcrumb. Au cas où il n'y a pas de param, on sort
+ * le virgule aussi. Ce qui permet aussi d'appeler cette
+ * méthode plusieurs fois pour plusieurs params.
+ */
+var Param = {
+  CONTENU            : ", 'global'",
+  ACTION_BNC         : ", 'bnc'",
+  ACTION_BNT         : ", 'bnt'",
+  ACTION_DELAYED_BNT : ", 'bnt'",
+  PU                 : ""
+}
+
+/**
+ * Retourne le nom de la méthode à appeler selon le type.
+ */
+function getJSMethod(type) {
+	return Methode[type];
+}
+
+/**
+ * Retourne le param de la méthode selon le type.
+ */
+function getJSParam(type) {
+	return Param[type];
+}
+
+/**
+ * Selon le type, remplace les tokens suivants :
+ * {0} avec le nom de la méthode JavaScript à invoquer
+ * {1} avec le paramètre (ou rien) pour la méthode
+ */
+function getCrumb(crumb) {
+    if(!crumb || !crumb.uri || !crumb.label || !crumb.type) {
+        return '';
+    }
+    return formatString('<li>&nbsp;&gt;&nbsp;'             +
+                            '<a href="javascript:{0}(\'' +
+	                                  crumb.uri        +
+	                                  '\'{1});">'    +
+	                                  crumb.label  +
+	                        '</a>'               +
+	                    '</li>',
+	                    getJSMethod(crumb.type),
+	                    getJSParam(crumb.type)
+           );
+}
+
+/**
+ * 
+ */
+function getDebut() {
+    //un string multiligne
+    return '<ul>                                         \
+               <li id="ariane-home">                      \
+                   <a title="Retour à la page d\'accueil"  \
+                      href="'+ PU_PREM_ECRAN +'">           \
+                       <img height="25"           \
+                            alt="Retour à la page d\'accueil" \
+                            src="'+ PATH_STATIC +'/web/bam/tech/allmedia/stb/commun/img/picto_home.png" /> \
+                   </a>';
+}
+
+/**
+ * 
+ */
+function getFin(label) {
+    if(!label) { return ''; }
+    return     '<li>&nbsp;&gt;&nbsp;' +
+                    label           +
+               '</li>'            +
+           '</ul>';
+}
+
+/**
+ * Remplace le contenu du fil d'ariane avec les nouveaux crumbs
+ * du style suivant :
+ *
+ * var breadCrumbs = [
+ *     {
+ *          label: "Simulation",
+ *          uri: "tcm-634-44500",
+ *          type: Type.CONTENU
+ *     },{
+ *          label: "Alertes",
+ *          uri: "Alertes",
+ *          type: Type.PU
+ *     },{
+ *          label: "Niveau actuel"
+ *     }
+ * ];
+ *
+ * Tout les objets du tableau doit declarer 'label', 'uri' et 'type'
+ * sauf le dernier qui peut ne contenir que de 'label' 
+ * 
+ * @param crumbs : un tableau d'objets
+ */
+function refreshBreadCrumbs(crumbs){
+    if(!crumbs){ return; }
+    
+    var html = getDebut();
+    var lenMinOne = crumbs.length - 1;
+    for(var i=0; i<lenMinOne; i++){
+        html += getCrumb(crumbs[i])
+    }
+    html += getFin(crumbs[lenMinOne].label);
+     
+    document.getElementById("fil-ariane-contenu").innerHTML = html;
+}

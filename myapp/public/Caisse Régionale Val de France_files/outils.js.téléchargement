@@ -1,0 +1,468 @@
+MSG_ok = "ok";
+
+// --- Sous Fonctions diverses utlisées par d'autres Fonctions
+	function isIntegerBetween(aInt,mini,maxi) {
+    	if (isInteger(aInt) && aInt!="")
+        	return ( (mini<=aInt) && (aInt<=maxi) );
+        else
+            return false;
+	}
+	
+	function isRealDate(j,m,a) {
+        var d = new Date();
+        d.setYear(a);
+        d.setMonth((m-1));
+        d.setDate(j);
+        return (j == d.getDate());
+	}
+
+	function isInteger(nb){
+        resultat_test=true;
+        for(var i=0;i<nb.length;i++){
+                resultat_test = (resultat_test&&nb.charAt(i)>='0'&&nb.charAt(i)<='9');
+        }
+        return (resultat_test)
+	}	
+// --------------------------------------------------------------------
+
+// --- Fonction de controle de la présence d'un champ dans une jsp ---
+function estPresent(nom_element) {
+		
+	for (i=0; i<document.forms.frm_fwk.elements.length; i++) {
+    	if (document.forms.frm_fwk[i].name == nom_element) 
+    		return true;
+    	}
+   	return false;
+}
+
+// --- Fonction de controle d'une date saisie avec la date du jour DATEC ---
+// La date saisie doit être supérieure ou égale à la date du jour : retour false si ko sinon ok
+function compareDateJour(dateSaisie, dateJour) {
+    var Jour   	= parseInt(eval(dateSaisie.substring(0,2)));
+	var Mois  	= parseInt(eval(dateSaisie.substring(3,5)));
+	var Annee 	= parseInt(eval(dateSaisie.substring(6,10)));
+	
+    var JrDay   = parseInt(eval(dateJour.substring(0,2)));
+	var JrMois  = parseInt(eval(dateJour.substring(3,5)));
+	var JrAnnee = parseInt(eval(dateJour.substring(6,10)));
+	
+	// Controle sur l'annee
+	if (Annee < JrAnnee) return false;
+	else if (Annee == JrAnnee)
+	{
+		// Controle sur le mois
+		if (Mois < JrMois) return false;
+		else if (Mois == JrMois)
+		{
+			// Controle sur le jour
+			if (Jour < JrDay) return false;
+			else return true;
+		}
+	}
+	return true;
+}
+
+// --- Fonction qui supprime les espaces inutiles en début de chaîne ---
+// --- permet d'écrire ma_string.ltrim()
+String.prototype.ltrim = function(){
+return this.replace(/^\s+/, "");
+}
+
+// --- Fonction de controle des saisies des adresses e-mail ---
+function valideEmail(nomChamp, obligatoire) 
+{
+	var CHAR_SPECIAUX = " ()<>,;:\\\"[]\t\n\r\0";
+	// Messages de retour
+	MSG_ERR_EMAIL           = "Vous devez préciser votre adresse e-mail.";
+	MSG_ERR_EMAIL_FORMAT    = "Veuillez saisir une adresse e-mail bien formatée.";
+	
+	var val = document.forms.frm_fwk[nomChamp].value;
+	
+	var indAt = -1;
+	var sub = "";
+	
+	// On cadre la chaîne de caractère saisie à gauche 
+	// pour supprimer les blancs non significatifs:
+	val = val.ltrim();
+	
+	// test si champ vide
+    if (val.length == 0) 
+    {
+    	if (obligatoire == true) 
+    	{
+    		document.forms.frm_fwk[nomChamp];
+    		return MSG_ERR_EMAIL;
+    	} 
+    	else return MSG_ok; 
+    } 
+    else 
+    { 
+       	for(i = 0; i < val.length; i++) 
+    	{   
+			// Caracteres speciaux non acceptes
+			// tests caracteres dans [0-9,a-z,A-Z,.,-,_,@]
+		   if (( CHAR_SPECIAUX.indexOf(val.charAt(i)) >= 0)||
+			  !( ((val.charCodeAt(i) > 47) && (val.charCodeAt(i) < 58)) ||
+				 ((val.charCodeAt(i) > 63) && (val.charCodeAt(i) < 91)) ||
+				 ((val.charCodeAt(i) > 96) && (val.charCodeAt(i) < 123)) ||
+				 (val.charAt(i) == '_') ||
+ 				 (val.charAt(i) == '-') ||
+ 				 (val.charAt(i) == '.')))
+ 			{
+	         	document.forms.frm_fwk[nomChamp];
+			   	return MSG_ERR_EMAIL_FORMAT;
+			}
+			// interdiction d'avoir 2 ou plusieurs caractères de type '.' ou '-' ou '_' successifs
+			if(i>0 &&((val.charAt(i) == '_' && val.charAt(i-1) == '_') ||
+					(val.charAt(i) == '-' && val.charAt(i-1) == '-') ||
+					(val.charAt(i) == '.' && val.charAt(i-1) == '.'))){
+				document.forms.frm_fwk[nomChamp];
+			   	return MSG_ERR_EMAIL_FORMAT;	
+			}
+		}
+    	// pas de blancs
+    	if (val.indexOf(' ') != -1)
+    	{
+        	document.forms.frm_fwk[nomChamp];
+	    	return MSG_ERR_EMAIL_FORMAT;
+	   	}
+    	else 
+    	{
+	    	// test arobase : il doit y en avoir un seul
+    		// et c est pas le premier caractère (pas de user) 
+    		if ( ((indAt=val.indexOf('@')) == -1) ||
+    	  	      ((indAt=val.indexOf('@')) == 0) ||
+        	      (indAt != val.lastIndexOf('@')) ) 
+    		{
+        		document.forms.frm_fwk[nomChamp];
+        		return MSG_ERR_EMAIL_FORMAT;
+    		}
+    		else
+    		{
+			    // il y a au moins un point dans le nom du domaine ( et donc domaine pas vide)
+			    // et pas le premier caractere et pas le dernier ou avant-dernier caractere
+			    // et au moins 2 caractères entre le @ et le dernier point
+			    sub=val.substring(indAt+1,val.length);
+			    if ( (sub.indexOf('.') == 0) ||
+			    	 (sub.lastIndexOf('.') == -1) ||
+    				 (sub.lastIndexOf('.') > (sub.length-3))||
+    				 ((sub.lastIndexOf('.')) < 2)) 
+    			{
+    				document.forms.frm_fwk[nomChamp];
+        			return MSG_ERR_EMAIL_FORMAT;
+    			}
+    			else
+    			{
+     				for(i = 0; i < sub.length; i++) 
+    				{
+						if ((i+1) < sub.length)
+						{
+							if ((sub.charAt(i) == '.')&&(sub.charAt(i+1) == '.'))
+								return MSG_ERR_EMAIL_FORMAT;
+						}
+					}
+					// Les caractères après le dernier point doivent être alphanumériques
+					subsub=sub.substring(sub.lastIndexOf('.')+1,sub.length);
+					for(i = 0; i < subsub.length; i++) {
+					if(!(((subsub.charCodeAt(i) > 47) && (subsub.charCodeAt(i) < 58)) ||
+						 ((subsub.charCodeAt(i) > 63) && (subsub.charCodeAt(i) < 91)) ||
+						 ((subsub.charCodeAt(i) > 96) && (subsub.charCodeAt(i) < 123)))){
+					 		document.forms.frm_fwk[nomChamp];
+	        				return MSG_ERR_EMAIL_FORMAT;
+					 	}
+					}
+					
+    			}
+    		 } 
+    	}
+   	return MSG_ok;
+	}
+}
+
+// --- Fonction de controle des saisies des adresses e-mail multiples ---
+function valideEmailMultiple(nomChamp, obligatoire) {
+	
+	var emailMul = document.getElementById("emailhiddenmul");
+	var val = document.forms.frm_fwk[nomChamp].value;
+
+	// On cadre la chaîne de caractère saisie à gauche 
+	// pour supprimer les blancs non significatifs:
+	val = val.ltrim();
+		
+	if(emailMul){
+		var indAt1=-1;
+		if(val.substring(val.length-1,1) != ";")
+			val = val+";";
+		indAt1 = val.indexOf(';');
+		    // Test adresse par adresse			
+		    while (indAt1<val.length) 
+		    {
+		    	var mail = val.substring(0,val.indexOf(';'));
+		    	val = val.substring(val.indexOf(';')+1);
+		    	indAt1 = val.indexOf(';');
+		    	emailMul.value = mail;
+		    	var msg_err;
+				msg_err = valideEmail("emailhiddenmul", true);
+				if (msg_err != MSG_ok) {return msg_err;}
+				if(indAt1 == -1)
+					return msg_err;
+				
+			}	
+		    	
+	
+	}
+	else {
+	
+	var CHAR_SPECIAUX = " ()<>,;:\\\"[]\t\n\r\0";
+	// Messages de retour
+	MSG_ERR_EMAIL           = "Vous n'avez pas saisi d'adresses e-mail, veuillez les saisir à nouveau.";
+	MSG_ERR_EMAIL_FORMAT    = "La saisie d'une de vos adresses e-mail est erronée, veuillez les saisir à nouveau.";
+	
+	var val1 = "";	
+
+	var indAt = -1;
+	var indAt1 = -1;
+    var sub = "";
+    
+    if (val.length == 0) {
+    	if (obligatoire == true) {
+    		document.forms.frm_fwk[nomChamp];
+    		return MSG_ERR_EMAIL;
+		} else return MSG_ok;
+	} else 
+	{
+		// On regarde s'il y a une ou plusieurs adresses
+		indAt1=val.indexOf(';')
+	
+		if (indAt1==-1) { return valideEmail(nomChamp, obligatoire); }
+		else 
+		{
+		    val1 = val.substring(0,indAt1);
+		    // Test adresse par adresse			
+		    while (indAt1<val.length) 
+		    {
+		    	for(i = 0; i < val1.length; i++) 
+	    		{   
+					// Caracteres speciaux non acceptes
+					// tests caracteres dans [0-9,a-z,A-Z,.,-,_,@]
+		   			if (( CHAR_SPECIAUX.indexOf(val1.charAt(i)) >= 0)||
+			  			!( ((val1.charCodeAt(i) > 47) && (val1.charCodeAt(i) < 58)) ||
+				 		   ((val1.charCodeAt(i) > 63) && (val1.charCodeAt(i) < 91)) ||
+				 		   ((val1.charCodeAt(i) > 96) && (val1.charCodeAt(i) < 123)) ||
+				 			(val1.charAt(i) == '_') ||
+ 				 			(val1.charAt(i) == '-') ||
+ 				 			(val1.charAt(i) == '.')))
+ 				 	{
+ 				 	   	document.forms.frm_fwk[nomChamp];
+ 				 	   	return MSG_ERR_EMAIL_FORMAT;
+ 				 	}
+					// interdiction d'avoir 2 ou plusieurs caractères de type '.' ou '-' ou '_' successifs
+					if(i>0 &&((val1.charAt(i) == '_' && val1.charAt(i-1) == '_') ||
+							(val1.charAt(i) == '-' && val1.charAt(i-1) == '-') ||
+							(val1.charAt(i) == '.' && val1.charAt(i-1) == '.'))){
+						document.forms.frm_fwk[nomChamp];
+					   	return MSG_ERR_EMAIL_FORMAT;	
+					} 				 				
+				}
+			   	// pas de blancs
+    			if (val1.indexOf(' ') != -1)
+		    	{
+        			document.forms.frm_fwk[nomChamp];
+					return MSG_ERR_EMAIL_FORMAT;
+		    	}
+		    	else
+		    	{
+		    		// test arobase : il doit y en avoir un seul
+    				// et c est pas le premier caractère (pas de user) 
+    				if ( ((indAt=val1.indexOf('@')) == -1) ||
+    	  	      		 ((indAt=val1.indexOf('@')) == 0) ||
+        	      		(indAt != val1.lastIndexOf('@')) ) 
+		    		{
+        				document.forms.frm_fwk[nomChamp];
+        				return MSG_ERR_EMAIL_FORMAT;
+    				}
+    				else
+    				{
+					    // il y a au moins un point dans le nom du domaine ( et donc domaine pas vide)
+					    // et pas le premier caractere et pas le dernier ou avant-dernier caractere
+					    // et au moins 2 caractères entre le @ et le dernier point
+					    sub=val.substring(indAt+1,val.length);
+					    if ( (sub.indexOf('.') == 0) ||
+					    	 (sub.lastIndexOf('.') == -1) ||
+		    				 (sub.lastIndexOf('.') > (sub.length-3))||
+		    				 ((sub.lastIndexOf('.')) < 2)) 
+		    			{
+    						document.forms.frm_fwk[nomChamp];
+        					return MSG_ERR_EMAIL_FORMAT;
+    					}
+    					else
+    					{
+     						for(i = 0; i < sub.length; i++) 
+    						{
+								if ((i+1) < sub.length)
+								{
+									if ((sub.charAt(i) == '.')&&(sub.charAt(i+1) == '.'))
+									{
+										return MSG_ERR_EMAIL_FORMAT;
+									}
+								}
+							}
+							// Les caractères après le dernier point doivent être alphanumériques
+							subsub=sub.substring(sub.lastIndexOf('.')+1,sub.length);
+							for(i = 0; i < subsub.length; i++) {
+							if(!(((subsub.charCodeAt(i) > 47) && (subsub.charCodeAt(i) < 58)) ||
+								 ((subsub.charCodeAt(i) > 63) && (subsub.charCodeAt(i) < 91)) ||
+								 ((subsub.charCodeAt(i) > 96) && (subsub.charCodeAt(i) < 123)))){
+							 		document.forms.frm_fwk[nomChamp];
+			        				return MSG_ERR_EMAIL_FORMAT;
+							 	}
+							}							
+    					}
+    				}
+    			}
+  
+				if (indAt1==-1) 
+				{
+					return MSG_ok;
+				}
+				else 
+				{
+					val1 = val.substring(indAt1+1,val.length);
+					indAt1=val1.indexOf(';');
+				}
+			}		
+		  }
+	}
+	}
+}
+
+// --- Fonction de controle de la validite d'une date ---
+function valideDate(dateJour, dateMois, dateAnnee, libelle) {
+	MSG_ERR_NON_DATE   = "Veuillez saisir \340 nouveau :\n - Saisie obligatoire d'une date valide.";
+	MSG_ERR_DATE_JJ    = "La saisie de " + libelle + " est erron\351e :\n - Le jour doit \352tre compris entre 01 et 31";
+	MSG_ERR_DATE_MM    = "La saisie de " + libelle + " est erron\351e :\n - Le mois doit \352tre compris entre 01 et 12";
+	MSG_ERR_DATE_AAAA  = "La saisie de " + libelle + " est erron\351e :\n - L'ann\351e doit \352tre saisie sur 4 chiffres";
+	MSG_ERR_DATE       = "Vous devez saisir " + libelle;
+
+	if ( (document.forms.frm_fwk[dateJour].length==0) && (document.forms.frm_fwk[dateMois].length==0) && (document.forms.frm_fwk[dateAnnee].length==0) )
+    {	document.forms.frm_fwk[dateJour];
+    	return MSG_ERR_DATE;
+   	}
+   	
+    if (!isIntegerBetween(document.forms.frm_fwk[dateJour].value,1,31)) 
+    { 	document.forms.frm_fwk[dateJour];
+        return MSG_ERR_DATE_JJ;
+    } 
+    
+    if (!isIntegerBetween(document.forms.frm_fwk[dateMois].value,1,12)) 
+    { 	document.forms.frm_fwk[dateMois];
+        return MSG_ERR_DATE_MM;
+    } 
+    
+    if ( (document.forms.frm_fwk[dateAnnee].value.length!=4) || (!isInteger(document.forms.frm_fwk[dateAnnee].value)) )
+    {   document.forms.frm_fwk[dateAnnee];
+        return MSG_ERR_DATE_AAAA;
+    } 
+   
+    if ( !isRealDate(document.forms.frm_fwk[dateJour].value, document.forms.frm_fwk[dateMois].value, document.forms.frm_fwk[dateAnnee].value))
+    {   document.forms.frm_fwk[dateJour];
+		return MSG_ERR_NON_DATE;
+	}
+	
+	return MSG_ok;
+}
+
+// GESTION DU BLOCAGE DES LIENS
+
+
+	var listeBoutonsClickOk;
+	var listesBoutonsClickException;
+	var messageClickBloquer;
+	
+	function bloquerClick(message,listeBoutons,listesBoutonsException){	
+		listeBoutonsClickOk = listeBoutons;
+		listesBoutonsClickException = listesBoutonsException;
+		
+		// On demarre l'observation du click
+		messageClickBloquer = message;
+		if(document.addEventListener ){
+				document.onclick = verifierClick;
+		}
+		else { 
+			// Pour IE
+			document.attachEvent("onmousedown",verifierClick);}
+	}
+	
+	function verifierClick(event){
+		var clicked = event.target || event.srcElement;
+		if(clicked) {
+			
+			var type = clicked.nodeName;
+			var typeParent = clicked.parentNode.nodeName;
+			if(type != "A" && typeParent != "A"){
+				return false;
+			}
+			
+			clicked = clicked.id;
+			
+			// On recherche une exception au blocage
+			var isException = false;
+			
+			// Ne pas oublier de laisser l'accès au lien aide
+			if(clicked == "top-actions-aide"){
+				isException = true;
+			}else if(listesBoutonsClickException){
+				for(var i =0; i < listesBoutonsClickException.length;i++){
+					if(listesBoutonsClickException[i] == clicked) {
+						isException = true;
+					}
+				}
+			}
+			
+			
+			// Si ce n'est pas une exception
+			if(!isException){
+				
+				// On cherche dans la liste des boutons autorisés
+				var debloquerClick = false;
+				for(i=0; i < listeBoutonsClickOk.length; i++){
+					if(listeBoutonsClickOk[i] == clicked) {
+						debloquerClick = true;
+					}
+				}
+				
+				if(debloquerClick){
+					if(document.removeEventListener){
+					    document.removeEventListener("mousedown",verifierClick,false);
+					}else {
+						document.detachEvent("onmousedown",verifierClick);				
+					}
+				}else{
+					alert(messageClickBloquer);
+					return false;
+				}
+			}
+		}
+	}
+
+/**
+* Gestion du surlignage dans le menu
+*/
+	function activerLienMenu(idAncreMenu){
+		var menu = document.getElementById("menu-bnt");
+		var listeLiens = menu.getElementsByTagName("ul")[0].getElementsByTagName("li");
+		if(listeLiens){
+		for(var i = 0; i < listeLiens.length; ++i){
+			var ancre = listeLiens[i].getElementsByTagName("a")[0];
+			if(ancre){
+				if(idAncreMenu == ancre.id){
+					 
+					ancre.className = "itemactif";
+				}else{
+					ancre.className ="";
+				}
+			}			
+		}
+		}
+	
+	}

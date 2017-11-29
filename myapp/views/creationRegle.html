@@ -982,7 +982,7 @@ var OICTOPBV= true;
 <div id="fil-ariane_2">
     <div id="fil-ariane-contenu"><ul>
 	<li>
-	<a title="Retour à la page d&#39;accueil" href="javascript:doAction(&#39;Synthcomptes&#39;, &#39;bnt&#39;);">                                  <img height="25" alt="Retour à la page d&#39;accueil" src="./Caisse Régionale Val de France_files/picto_home.png">                    </a></li><li>&nbsp;&gt;&nbsp;Synthèse comptes</li></ul></div>
+	<a title="Retour à la page d&#39;accueil" href="javascript:doAction(&#39;Synthcomptes&#39;, &#39;bnt&#39;);">                                  <img height="25" alt="Retour à la page d&#39;accueil" src="./Caisse Régionale Val de France_files/picto_home.png">                    </a></li><li>&nbsp;&gt;&nbsp;Créer une règle</li></ul></div>
 
 
 
@@ -1137,7 +1137,7 @@ function resetChoix() {
 					<ul>
 				<script>aide_bnt_smartphoneCash= "Contrôlez les paiements par smartphone";</script>
 				<li class="nomarge-li-BNT">
-					<a style="width:auto" href="./autonomieSupervisee" onmouseover="StatusMessage(true, aide_bnt_smartphoneCash);return true" onmouseout="StatusMessage( false )">Autonomie supervisée</a>
+					<a style="width:auto" href="./Ajout compte.html" onmouseover="StatusMessage(true, aide_bnt_smartphoneCash);return true" onmouseout="StatusMessage( false )">Contrôle des Paiements</a>
 				</li>
 				<script>aide_bnt1_7= "Effectuez un virement";</script>
 				<li class="nomarge-li-BNT">
@@ -1428,7 +1428,7 @@ var newwidthpopup=690;
 <script type="text/javascript">
 var breadCrumbs = [
     {
-         label: "Synthèse comptes"
+         label: "Créer une règle"
     }
 ];
 refreshBreadCrumbs(breadCrumbs);
@@ -1454,8 +1454,7 @@ var widthpopup=580;
 </script>
 <h1>
 
-		Contrôle des Paiements
-
+		Ajouter une règle de contrôle
 
 
 		<span id="top-actions">
@@ -1467,31 +1466,61 @@ var widthpopup=580;
 </div>
 </br>
 <div class="form-group row">
-  <label for="nom-input" class="col-2 col-form-label">Nom</label>
+  <label for="nom-regle-input" class="col-2 col-form-label">Nom de la règle</label>
   <div class="col-10">
-    <input class="form-control" type="text" placeholder="Ajouter un nom" id="nom-input">
+    <input class="form-control" type="text" placeholder="Ajouter un nom" id="nom-regle-input">
   </div>
 </div>
+<div class="form-group inline">
+    <label for="exclureCategory">Catégorie à exclure</label>
+    <select class="form-control" id="exclureCategory">
+      <option>Buraliste</option>
+      <option>Jeux vidéo</option>
+      <option>Livre</option>
+      <option>Cinema</option>
+      <option>Bar</option>
+    </select>
+  </div>
 <div class="form-group row">
-  <label for="prenom-input" class="col-2 col-form-label">Prénom</label>
+  <label for="montant-input" class="col-2 col-form-label">Montant maximum</label>
   <div class="col-10">
-    <input class="form-control" type="search" placeholder="Ajouter un prénom" id="prenom-input">
+    <input class="form-control" type="number" placeholder="Ajouter un montant maximum" id="montant-input">
   </div>
 </div>
- <div class="form-group inline">
-    <label for="compteSelect">Numéro de compte</label>
-    <select class="form-control" id="compteSelect">
-      <option>3456789086578</option>
-      <option>9545678987678</option>
-      <option>8733478907652</option>
-      <option>9876567345675</option>
-      <option>7653234567876</option>
+
+<div class="form-group row">
+  <label for="start-time-input" class="col-2 col-form-label">Heure de début</label>
+  <div class="col-10">
+    <input class="form-control" type="time" placeholder="Rentrer une heure de début" id="start-time-input">
+  </div>
+</div>
+
+<div class="form-group row">
+  <label for="end-time-input" class="col-2 col-form-label">Heure de fin</label>
+  <div class="col-10">
+    <input class="form-control" type="time" placeholder="Rentrer une heure de fin" id="end-time-input">
+  </div>
+</div>
+
+<div class="form-group inline">
+    <label for="exclureJour">Jour de la semaine</label>
+    <select class="form-control" id="exclureJour">
+      <option>Tous les jours</option>
+	  <option>Lundi à vendredi</option>
+      <option>Week-End</option>
+      <option>Lundi</option>
+      <option>Mardi</option>
+      <option>Mercredi</option>
+	  <option>Jeudi</option>
+	  <option>Vendredi</option>
+	  <option>Samedi</option>
+	  <option>Dimanche</option>
     </select>
   </div>
 
 <div>
-<button type="button" class="btn btn-success" onclick="window.location.href='./autonomieSupervisee'">Valider</button>
-<button type="button" class="btn btn-warning" onclick="window.location.href='./autonomieSupervisee'">Annuler</button>
+<button type="button" onclick="myFunction();" class="btn btn-success">Valider</button>
+<button type="button" onclick="window.location.href='./historiqueCompte'" class="btn btn-warning">Annuler</button>
 </div>
 
 <table width="364" border="0" cellspacing="0" cellpadding="0">
@@ -1500,6 +1529,14 @@ var widthpopup=580;
 
 
 <script type="text/javascript">
+
+var function = myFunction(){
+var name = jQuery('#nom-regle-input').val();
+
+
+
+}
+
 var g_TagPageBAM = "consultation::synthese::compte";
 var g_TagPap = [];
 </script>

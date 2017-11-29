@@ -1,0 +1,158 @@
+function clicCoremetrics(marquXiti, natureClic){
+
+     /*
+     Pour info, structure des tags de clic :
+          - PAP :
+                - Affichage : tag de PDC + "_Affichage" pour les blocs PDC BAM, Info, Promo, BAS
+                     Ex : Syn_Promo_Taux_promo_Affichage
+                - Clic : reprend le tag de PDC + "__" + tag de clic
+                     Ex : Syn_Promo_Taux_promo__Lien_Taux_promo_2014_05
+          - Clic classique : pas de structure particulière.
+     */
+ 
+     var rx = /^(.+?)(_Affichage)?$/g;
+     var match;
+
+     /*
+     La variable pageActuelle va prendre une valeur différente selon qu'il s'agit d'une page de contenu ou transactionnelle.
+     Elle doit permettre d'identifier la page courante.
+          - Pour les pages transactionnelles, cette variable récupère le marqueur de la page courante.
+            On part du principe que ce marqueur est mis dans une variable globale g_TagPageBAM, qui vaut null pour les pages de contenu.
+          - Pour les pages de type contenu, cette variable recupère la variable marqueurXiti définie globalement via window.marqueurXiti.
+     */
+
+     var pageActuelle = (g_TagPageBAM) ? g_TagPageBAM : window.marqueurXiti; 
+     var tagClic;
+
+     try{
+          if(match = rx.exec(marquXiti)){
+                tagClic = match[1];
+                var isAffichagePAP = (match[2] == "_Affichage");
+                var isClicPAP = false;
+                for(var i=0; i<g_TagPap.length; i++){
+                     if(marquXiti.indexOf(g_TagPap[i]) == 0){
+                          isClicPAP = true;
+                          tagClic = g_TagPap[i];
+                          break;
+                     }
+                }
+                /*
+                     Cas des tags PAP : affichage et clic
+                */
+                if(isAffichagePAP || isClicPAP){
+                     var promoTag = tagClic + "-_-NA-_-NA";
+                     if(isAffichagePAP){
+                          g_TagPap.push(tagClic);
+                         
+                          cmCreateManualImpressionTag(pageActuelle, promoTag);
+                     }
+                     else{
+                          var idx = match[1].indexOf("__");
+                          idx = (idx != -1) ? idx+2 : 0;
+                          var libelleTag = match[1].substring(idx);
+                         
+                          cmCreateManualLinkClickTag(pageActuelle + "?cm_sp=" + promoTag, libelleTag);
+                     }
+                }
+                /*
+                     Cas des tags de clic classiques
+                */
+                else{                               
+                     cmCreateElementTag(tagClic, null, pageActuelle);
+                }
+          }
+     }
+     catch(e){}
+    
+     return false;
+}
+
+function clicXiti(marqueurXiti,natureClic)
+{
+	if ((WB_TRACKING_CBINAM != "1") && (WB_TRACKING_CBINAM != "2")){
+	// si l'option caisse n'est pas activée, on continue à générer des tags XiTi
+		// consentement du client
+		if (TRACKING =="O") {
+			hsh = new Date();
+			hsd = document;
+			hsi = 'https://logs8.xiti.com/hit.xiti?cc='+ccXiti+'&cs='+codeCaisse;
+			hsi += '&p='+marqueurXiti+ '&hl=' + hsh.getHours() + 'x' + hsh.getMinutes() + 'x' + hsh.getSeconds();
+			hsi += '&clic='+natureClic;
+			if(parseFloat(navigator.appVersion)>=4)
+			{
+				Xiti_s=screen;hsi += '&r=' + Xiti_s.width + 'x' + Xiti_s.height + 'x' + Xiti_s.pixelDepth + 'x' + Xiti_s.colorDepth;
+			}
+			hsi += '&ref=' + hsd.referrer.replace('&', '$');
+	
+			xt_img = new Image();
+			xt_img.src = hsi;
+		}
+	} else {
+			if (WB_TRACKING_CBINAM == "1") {
+			// Si l'option caisse est activée, on génère des tags Coremetrics
+				// consentement du client
+				if (TRACKING =="O") {
+					clicCoremetrics(marqueurXiti,natureClic);
+				}
+			} else {
+			// si l'option caisse est à "2", on ne doit pas générer de tag (ni XiTi, ni Coremetrics)
+			}
+	}
+}
+
+function displayBinary(pack, img, w, h){
+	document.write("<img border=\"0\" src=\"" + urlImageWAI + "/images/"+ codeCaisse + "/" + pack + "/" + img + "\"");
+	if(w != 0)
+		document.write(" width=\"" + w + "\"");
+	if(h != 0)
+		document.write(" height=\"" + h + "\"");
+	document.write("/>");
+}
+
+function displayStyleFixe(style){
+	document.write("<link href=\"" + urlImageWAI + "/" + style + "\" rel=\"stylesheet\" type=\"text/css\"></link>");
+}
+
+function displayPictFixe(img, w, h){
+	document.write("<img border=\"0\" src=\" " + urlImageWAI + "/" + img + "\"");
+	if(w != 0)
+		document.write(" width=\"" + w + "\"");
+	if(h != 0)
+		document.write(" height=\"" + h + "\"");
+	document.write("/>");
+}
+
+function displayFlash(nomPack,nomFlash,urlParam,tagXiti,w,h) {
+
+		var urlFlash = urlImageWAI + "/images/"+ codeCaisse + "/" + nomPack + nomFlash;
+		document.write("<div id=\"papflash\">");
+		document.write("<script type=\"text/javascript\">");
+		document.write("var so = new SWFObject(\"" + urlFlash + "\", \"papflash\"," + w +","+ h + ", \"7\", \"#000000\");");
+		document.write("so.addParam(\"scale\", \"noscale\");");
+		document.write("so.addParam(\"wmode\", \"transparent\");");
+		document.write("so.addParam(\"allowScriptAccess\",\"sameDomain\");");
+		document.write("so.addParam(\"quality\", \"high\");");
+		document.write("so.addVariable(\"lien1\",\"" + urlParam + "\");");
+		document.write("so.addVariable(\"tag1\",\"" + tagXiti + "\");");
+		document.write("so.write(\"papflash\");");
+		document.write("</script>");
+		document.write("</div>");
+}
+
+function lancerBinaire(pack, url, w, h) {
+	w = !w ? 600 : w;
+	h = !h ? 500 : h;
+	window.open("" + urlImageWAI+ "/images/" + codeCaisse +"/" + pack + "/" + url, "win", "height=" + h + ", width=" + w + ", location=no, menubar=no, resizable=yes, scrollbars=yes, status=yes, toolbar=no");
+}
+
+function lancerContenuPopup(uri, w, h, cible) {
+	w = !w ? 600 : w;
+	h = !h ? 500 : h;
+	var url = pathDynamicStb + "/app/bam/tech/allmedia/stb/wai/jsp/uriContentOnlyDisplay.jsp?uri=" + uri + "&caisse=" + codeCaisse + "&sProfilBAM=" +  topPfv + "&sSessionSAG=" + idSessionSag +  "&sDate=" + sDate +  "&urlBase=" + urlBase +  "&ccXiti=" + ccXiti; 
+	window.open(url, "win", "height=" + h + ", width=" + w + ", location=no, menubar=no, resizable=yes, scrollbars=yes, status=yes, toolbar=no");
+}
+
+function displayUrlDynamic(urlParam) {
+	var url = "" + urlBase + "/" + urlParam;
+	window.open(url, "win", "height=500, width=600, location=yes, menubar=yes, resizable=yes, scrollbars=yes, status=yes, toolbar=yes");
+}
