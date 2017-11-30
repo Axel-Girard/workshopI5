@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var cons = require('consolidate');
 
 var index = require('./routes/index');
+var db = require('./db.js')
 
 var app = express();
 
