@@ -1454,7 +1454,7 @@ var widthpopup=580;
 </script>
 <h1>
 
-		Contrôle des Paiements
+		Ajouter un compte
 
 
 
@@ -1490,7 +1490,7 @@ var widthpopup=580;
   </div>
 
 <div>
-<button type="button" class="btn btn-success" onclick="window.location.href='ajoutCompte/nom/prenom/01'">Valider</button>
+<button type="button" class="btn btn-success" onclick="submitFunction()">Valider</button>
 <button type="button" class="btn btn-warning" onclick="window.location.href='autonomieSupervisee'">Annuler</button>
 </div>
 
@@ -1500,6 +1500,13 @@ var widthpopup=580;
 
 
 <script type="text/javascript">
+var submitFunction = function(){
+  nom = jQuery("#nom-input").val();
+  prenom = jQuery("#prenom-input").val();
+  num = jQuery("#compteSelect").val();
+  window.location.href='ajoutCompte/'+nom+'/'+prenom+'/'+num;
+}
+
 var g_TagPageBAM = "consultation::synthese::compte";
 var g_TagPap = [];
 </script>
