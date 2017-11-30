@@ -12,16 +12,8 @@ module.exports = function () {
       });
 
       connection.connect(function(err) {
-        if (err) {
-          console.info('error connecting: ' + err.stack);
-          return;
-        }
-
+        if (err) throw err;
         console.log('connected as id ' + connection.threadId);
-        connection.query("SELECT * FROM compte", function (err, result, fields) {
-          if (err) throw err;
-          console.log(result);
-        });
       });
     }
 

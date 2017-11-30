@@ -1137,7 +1137,7 @@ function resetChoix() {
 					<ul>
 				<script>aide_bnt_smartphoneCash= "Contrôlez les paiements par smartphone";</script>
 				<li class="nomarge-li-BNT">
-					<a style="width:auto" href="./Autonomie supervisée.html" onmouseover="StatusMessage(true, aide_bnt_smartphoneCash);return true" onmouseout="StatusMessage( false )">Autonomie supervisée</a>
+					<a style="width:auto" href="./autonomieSupervisee" onmouseover="StatusMessage(true, aide_bnt_smartphoneCash);return true" onmouseout="StatusMessage( false )">Autonomie supervisée</a>
 				</li>
 				<script>aide_bnt1_7= "Effectuez un virement";</script>
 				<li class="nomarge-li-BNT">
@@ -1514,10 +1514,10 @@ M.       X
 <tbody>
 	<tr class="ligne-impaire">
 		<th class="cel-texte" scope="row">
-			CCHQ
-
-				n°45678909876
-
+			Compte :
+      <script>
+        alert($.session.get('numCompte'));
+      </script>
 		</th>
 
 

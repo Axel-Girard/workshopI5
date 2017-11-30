@@ -35,7 +35,8 @@ router.get('/ajoutCompte/:nom/:prenom/:numeroCompte', function(req, res, next) {
     console.log("1 record inserted");
   });
 
-  res.send(req.params);
+  res.redirect('/historiqueCompte');
 });
+
 
 module.exports = router;

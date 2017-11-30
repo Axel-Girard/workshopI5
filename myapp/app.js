@@ -7,7 +7,10 @@ var bodyParser = require('body-parser');
 var cons = require('consolidate');
 
 var index = require('./routes/index');
-var db = require('./db.js')
+
+// initialization of the connection to the database
+var db = require('./db.js');
+var connection = new db();
 
 var app = express();
 
