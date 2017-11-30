@@ -23,7 +23,8 @@ router.get('/historiqueCompte', function(req, res, next) {
 });
 
 router.get('/ajoutCompte/:nom/:prenom/:numeroCompte', function(req, res, next) {
-  res.send(req.params);
+  console.log(req.param.nom);
+  res.render('index');
 });
 
 module.exports = router;
